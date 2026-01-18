@@ -26,37 +26,34 @@ class SessionsPanel extends JPanel {
 
     public SessionsPanel(SessionController sessionController) {
         this.sessionController = sessionController;
-        setLayout(new BorderLayout());
+        setLayout(new FlowLayout(FlowLayout.LEFT));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        // Form panel with single FlowLayout - all components flow horizontally
-        JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         // Day field
         JTextField dayField = new JTextField(5);
-        formPanel.add(new JLabel("Day:"));
-        formPanel.add(dayField);
+        add(new JLabel("Day:"));
+        add(dayField);
 
         // Month field
         JTextField monthField = new JTextField(5);
-        formPanel.add(new JLabel("Month:"));
-        formPanel.add(monthField);
+        add(new JLabel("Month:"));
+        add(monthField);
 
         // Year field
         JTextField yearField = new JTextField(5);
-        formPanel.add(new JLabel("Year:"));
-        formPanel.add(yearField);
+        add(new JLabel("Year:"));
+        add(yearField);
 
         // Venue field
         JTextField venueField = new JTextField(20);
-        formPanel.add(new JLabel("Venue:"));
-        formPanel.add(venueField);
+        add(new JLabel("Venue:"));
+        add(venueField);
 
         // Session Type field
         String[] sessionTypes = { SessionType.POSTER.name(), SessionType.ORAL.name() };
         JComboBox<String> typeComboBox = new JComboBox<>(sessionTypes);
-        formPanel.add(new JLabel("Session Type:"));
-        formPanel.add(typeComboBox);
+        add(new JLabel("Session Type:"));
+        add(typeComboBox);
 
         // Create button
         JButton createButton = new JButton("Create Session");
@@ -72,10 +69,7 @@ class SessionsPanel extends JPanel {
             Session newSession = new Session(date, venue, SessionType.valueOf(type));
             sessionController.addSession(newSession);
         });
-        formPanel.add(createButton);
-
-        // Add form panel to the north so it doesn't stretch vertically
-        add(formPanel, BorderLayout.NORTH);
+        add(createButton);
     }
 }
 

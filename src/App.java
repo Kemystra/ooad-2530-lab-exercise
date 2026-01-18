@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 // Main Application
@@ -23,7 +24,7 @@ public class App extends JFrame {
         // They extend JPanel
         // WRITE YOUR PAGE IN A SEPARATE FILE BY EXTENDING JPanel
         // Here TabbedPage is extending JPanel
-        TabbedPage coordinatorPage = new TabbedPage();
+        CoordinatorPage coordinatorPage = new CoordinatorPage();
 
         // Add panels to card layout
         // Give unique name to each page
@@ -31,6 +32,17 @@ public class App extends JFrame {
         mainPanel.add(coordinatorPage, "Coordinator");
 
         add(mainPanel);
+
+        // Ctrl+Q to close the application
+        KeyStroke ctrlQ = KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK);
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ctrlQ, "quit");
+        getRootPane().getActionMap().put("quit", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                dispose();
+                System.exit(0);
+            }
+        });
 
         // Show empty page first
         cardLayout.show(mainPanel, "LOGIN");

@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CoordinatorPage extends JPanel {
-    public CoordinatorPage(SessionController sessionController) {
+    public CoordinatorPage(SessionController sessionController, UserController userController) {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Add/Edit Sessions", new SessionsPanel(sessionController));
+        tabbedPane.addTab("Add/Edit Sessions", new SessionsPanel(sessionController, userController));
         tabbedPane.addTab("Assign Sessions", new AssignSessionsPanel(sessionController));
         tabbedPane.addTab("Result", new ResultPanel());
         add(tabbedPane, BorderLayout.CENTER);
@@ -23,11 +23,13 @@ public class CoordinatorPage extends JPanel {
 
 class SessionsPanel extends JPanel {
     private SessionController sessionController;
+    private UserController userController;
     private DefaultListModel<String> sessionListModel;
     private JList<String> sessionList;
 
-    public SessionsPanel(SessionController sessionController) {
+    public SessionsPanel(SessionController sessionController, UserController userController) {
         this.sessionController = sessionController;
+        this.userController = userController;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -57,6 +59,22 @@ class SessionsPanel extends JPanel {
         add(new JLabel("Session Type:"));
         add(typeComboBox);
 
+        // Evaluator dropdown field
+        JComboBox<User> evaluatorComboBox = new JComboBox<>();
+        for (User evaluator : userController.getEvaluators()) {
+            evaluatorComboBox.addItem(evaluator);
+        }
+        add(new JLabel("Evaluator:"));
+        add(evaluatorComboBox);
+
+        // Student dropdown field
+        JComboBox<User> studentComboBox = new JComboBox<>();
+        for (User student : userController.getStudents()) {
+            studentComboBox.addItem(student);
+        }
+        add(new JLabel("Student:"));
+        add(studentComboBox);
+
         // Create button
         JButton createButton = new JButton("Create Session");
         createButton.addActionListener(e -> {
@@ -66,9 +84,12 @@ class SessionsPanel extends JPanel {
             String date = day + "/" + month + "/" + year;
             String venue = venueField.getText();
             String type = (String) typeComboBox.getSelectedItem();
+            User evaluator = (User) evaluatorComboBox.getSelectedItem();
+            User student = (User) studentComboBox.getSelectedItem();
             JOptionPane.showMessageDialog(this,
-                    "Session Created:\nDate: " + date + "\nVenue: " + venue + "\nType: " + type);
-            Session newSession = new Session(date, venue, SessionType.valueOf(type));
+                    "Session Created:\nDate: " + date + "\nVenue: " + venue + "\nType: " + type +
+                            "\nEvaluator: " + evaluator + "\nStudent: " + student);
+            Session newSession = new Session(date, venue, SessionType.valueOf(type), evaluator, student);
             sessionController.addSession(newSession);
             refreshSessionList();
         });
@@ -88,7 +109,10 @@ class SessionsPanel extends JPanel {
     private void refreshSessionList() {
         sessionListModel.clear();
         for (Session session : sessionController.getSessions()) {
-            String display = session.getDate() + " | " + session.getVenue() + " | " + session.getType();
+            String evaluatorName = session.getEvaluator() != null ? session.getEvaluator().getName() : "N/A";
+            String studentName = session.getStudent() != null ? session.getStudent().getName() : "N/A";
+            String display = session.getDate() + " | " + session.getVenue() + " | " + session.getType() +
+                    " | Evaluator: " + evaluatorName + " | Student: " + studentName;
             sessionListModel.addElement(display);
         }
     }

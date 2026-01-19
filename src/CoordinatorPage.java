@@ -6,7 +6,6 @@ public class CoordinatorPage extends JPanel {
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Add/Edit Sessions", new SessionsPanel(sessionController, userController));
-        tabbedPane.addTab("Assign Sessions", new AssignSessionsPanel(sessionController));
         tabbedPane.addTab("Result", new ResultPanel());
         add(tabbedPane, BorderLayout.CENTER);
     }
@@ -115,15 +114,6 @@ class SessionsPanel extends JPanel {
                     " | Evaluator: " + evaluatorName + " | Student: " + studentName;
             sessionListModel.addElement(display);
         }
-    }
-}
-
-class AssignSessionsPanel extends JPanel {
-    public AssignSessionsPanel(SessionController sessionController) {
-        setLayout(new GridBagLayout());
-        JLabel label = new JLabel("Assign Sessions Panel");
-        label.setFont(new Font("Arial", Font.PLAIN, 18));
-        add(label);
     }
 }
 
